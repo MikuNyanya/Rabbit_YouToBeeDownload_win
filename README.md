@@ -1,4 +1,4 @@
-# Rabbit_YouToBeeDownload_ ~~你要蜜蜂~~
+# Rabbit_YouToBeeDownload_win ~~你要蜜蜂_赢!~~
 -----
     通过 y2mate 解析并下载油管视频，y2mate的弹出广告真的是...一言难尽
     使用本程序时请自备代理
