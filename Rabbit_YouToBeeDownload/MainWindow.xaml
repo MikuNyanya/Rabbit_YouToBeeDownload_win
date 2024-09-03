@@ -3,28 +3,74 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:Rabbit_YouToBeeDownload"
+        xmlns:Lay="clr-namespace:LayUI.Wpf.Controls;assembly=LayUI.Wpf"
+        xmlns:LayHelper="clr-namespace:LayUI.Wpf.Extend;assembly=LayUI.Wpf"
         mc:Ignorable="d"
-        Title="Rabbit_YouToBeeDownload" Height="450" Width="800">
+        xmlns:prism="http://prismlibrary.com/"
+        Title="Rabbit_YouToBeeDownload" 
+        Height="800" Width="600"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        >
     <Grid Loaded="MainWindow_Loaded">
-        <Button x:Name="btn_search" Content="解析视频信息" HorizontalAlignment="Left" Margin="88,62,0,0" VerticalAlignment="Top" Height="27" Width="86" Click="btn_search_Click"/>
-        <TextBox x:Name="txt_youtubeurl" HorizontalAlignment="Left" Margin="87,38,0,0" TextWrapping="NoWrap" Text="https://www.youtube.com/watch?v=ygY2qObZv24&amp;list=RDygY2qObZv24&amp;index=1" VerticalAlignment="Top" Width="494"/>
-        <TextBox x:Name="txt_proxyurl" HorizontalAlignment="Left" Margin="87,14,0,0" TextWrapping="NoWrap" Text="127.0.0.1:30001" VerticalAlignment="Top" Width="220" IsEnabled="true"/>
-        <TextBox x:Name="txt_title" HorizontalAlignment="Left" Margin="87,96,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="494"/>
-        <TextBox x:Name="txt_vid" HorizontalAlignment="Left" Margin="87,118,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="105" IsEnabled="False"/>
-        <TextBox x:Name="txt_k" HorizontalAlignment="Left" Margin="88,147,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="493" IsEnabled="False"/>
-        <TextBox x:Name="txt_p" HorizontalAlignment="Left" Margin="270,117,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="41" IsEnabled="False"/>
-        <Button x:Name="btn_download" Content="下载" HorizontalAlignment="Left" Margin="88,241,0,0" VerticalAlignment="Top" Height="23" Width="88" Background="#FF33EF6A" Click="btn_download_Click"/>
-        <TextBox x:Name="txt_savefilepath" HorizontalAlignment="Left" Margin="88,220,0,0" TextWrapping="NoWrap" Text="d:\" VerticalAlignment="Top" Width="219"/>
-        <Label Content="代理" HorizontalAlignment="Left" Margin="28,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="油管链接" HorizontalAlignment="Left" Margin="16,32,0,0" VerticalAlignment="Top"/>
-        <Label Content="视频保存到" HorizontalAlignment="Left" Margin="16,216,0,0" VerticalAlignment="Top"/>
-        <Label Content="标题" HorizontalAlignment="Left" Margin="30,90,0,0" VerticalAlignment="Top"/>
-        <Label Content="视频id" HorizontalAlignment="Left" Margin="23,114,0,0" VerticalAlignment="Top"/>
-        <Label Content="视频key" HorizontalAlignment="Left" Margin="21,139,0,0" VerticalAlignment="Top"/>
-        <Label Content="分辨率" HorizontalAlignment="Left" Margin="219,114,0,0" VerticalAlignment="Top"/>
-        <GroupBox Header="logo" Margin="586,5,10,23"/>
-        <TextBlock x:Name="txt_out" HorizontalAlignment="Left" Margin="591,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="382" Width="178"/>
+        <Lay:LayTitleBar Background="DeepSkyBlue" CornerRadius="4" WindowState="Normal">
+            <Lay:LayTitleBar.Header>
+                <Border Height="40">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Margin="10,0" VerticalAlignment="Center" Foreground="White" Text="YouToBeeDownload_WIN" />
+                        
+                    </Grid>
+                </Border>
+            </Lay:LayTitleBar.Header>
+           
+        </Lay:LayTitleBar>
+
+        <ScrollViewer Background="White" Margin="10,50,10,10" >
+            <StackPanel Margin="6">
+                <Lay:LayLegend Header="代理" />
+                <Lay:LayTextBox x:Name="txt_proxyurl" Width="auto"  Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="代理" Text="127.0.0.1:30001"/>
+                <Lay:LayLegend Header="视频链接" />
+                <Lay:LayTextBox x:Name="txt_youtubeurl" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="油管视频链接" 
+                                Text="https://www.youtube.com/watch?v=ygY2qObZv24&amp;list=RDygY2qObZv24&amp;index=1"/>
+
+                <Lay:LayButton x:Name="btn_search" Margin="0,5" Content="解析视频信息" Type="Default" Click="btn_search_Click" />
+
+                <Lay:LayLegend Header="视频信息" />
+                <Grid>
+                    <Image x:Name="img_v" Width="300" Height="200" />
+                </Grid>
+
+                <Lay:LayTextBox x:Name="txt_title" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="视频标题(可修改)"/>
+                <Lay:LayTextBox  x:Name="txt_vid" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="vid(自动解析)" IsEnabled="False"/>
+                <Lay:LayTextBox  x:Name="txt_k" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="key(自动解析)" IsEnabled="False"/>
+                <Lay:LayTextBox  x:Name="txt_p" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="分辨率(自动解析能获取到的最高分辨率)" IsEnabled="False"/>
+
+                <Lay:LayLegend x:Name="lab_download" Header="下载"/>
+                <Lay:LayTextBox  x:Name="txt_savefilepath" Width="auto" Margin="0,5" LayHelper:LayControlsBaseHelper.IsFocus="true" Watermark="视频保存路径" Text="d:\">
+                    <Lay:LayTextBox.InnerRightContent>
+                        <Grid>
+                            <Lay:LayButton x:Name="btn_selectpath" Width="25" Margin="10,5" VerticalAlignment="Center" Content="· · ·" Type="Default" Click="btn_selectpath_Click"/>
+                        </Grid>
+                    </Lay:LayTextBox.InnerRightContent>
+                </Lay:LayTextBox>
+
+                <Lay:LayButton x:Name="btn_download" Content="下载视频" Type="Default" Click="btn_download_Click"/>
+                <Lay:LayProgressBar x:Name="bar_download" Margin="5,10"/>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+        
+
 
     </Grid>
+
 </Window>

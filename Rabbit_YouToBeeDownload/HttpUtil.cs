@@ -10,7 +10,7 @@ namespace Rabbit_YouToBeeDownload
     {
         private static readonly string DefaultUserAgent = "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
 
-        public static string PostFormData(string url, Dictionary<string, string> param,WebProxy proxy)
+        public static string PostFormData(string url, Dictionary<string, string> param,WebProxy proxy,string referer)
         {
             string Ticks = DateTime.Now.Ticks.ToString();
             HttpWebRequest request = null;
@@ -29,8 +29,9 @@ namespace Rabbit_YouToBeeDownload
             request.ContentType = string.Format("multipart/form-data; boundary=--------------------------{0}", Ticks);
             request.UserAgent = DefaultUserAgent;
             request.KeepAlive = true;
+            request.Referer = referer;
             //  request.Timeout = 300000;
-           
+
             string Paramter = GetFormdata(param, Ticks);
             byte[] byteData = Encoding.UTF8.GetBytes(Paramter);
             int length = byteData.Length;

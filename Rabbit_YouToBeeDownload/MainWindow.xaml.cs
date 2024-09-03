@@ -4,6 +4,9 @@ using System.Net;
 using System.Printing;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
 
 namespace Rabbit_YouToBeeDownload
 {
@@ -28,9 +31,7 @@ namespace Rabbit_YouToBeeDownload
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            txtOutAppend("==========\r\n使用说明：\r\n-填写代理 如果可以直接访问y2mate则可以不填\r\n-填写油管视频页面链接\r\n-点击视频解析\r\n-如能在下方看到视频信息则表明解析成功，此时下载按钮就可以点击了\r\n-选择视频保存位置后 点击下载即可\r\n下载进度在此处显示");
-            txtOutAppend("==========\r\n本程序属于个人使用性质，没有做任何异常处理\r\n但程序主要功能没问题，所以闪退的时候请自行检查视频链接和代理是否正确");
-            txtOutAppend("==========\r\n这里是兔子");
+         
         }
 
         private void btn_search_Click(object sender, RoutedEventArgs e)
@@ -40,8 +41,8 @@ namespace Rabbit_YouToBeeDownload
             string youtubeUrl = this.txt_youtubeurl.Text;
             string proxyUrl = this.txt_proxyurl.Text;
 
-            //解析视频信息
-            string apiUrl = "https://www.y2mate.com/mates/analyzeV2/ajax";
+            //解析视频信息 https://ssvid.net/zh-cn
+            string apiUrl = "https://www.y2mate.com/mates/en948/analyzeV2/ajax";
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("k_query", youtubeUrl);
             param.Add("k_page", "home");
@@ -50,8 +51,9 @@ namespace Rabbit_YouToBeeDownload
 
             //代理
             WebProxy webProxy = new WebProxy(proxyUrl);
+            string referer = "https://www.y2mate.com/en948";
 
-            string rspBody = HttpUtil.PostFormData(apiUrl, param, webProxy);
+            string rspBody = HttpUtil.PostFormData(apiUrl, param, webProxy, referer);
 
             //解析返回视频信息，最多到480p，再低算了吧，都糊了，人间不值得
             //JsonSerializer.Serialize(object);
@@ -75,8 +77,11 @@ namespace Rabbit_YouToBeeDownload
             this.txt_p.Text = p;
             this.txt_vid.Text = bodyInfo.vid;
             this.txt_title.Text = bodyInfo.title;
+            string imgUrl = "https://i.ytimg.com/vi/" + bodyInfo.vid + "/0.jpg";
 
-            txtOutAppend("==========\r\n解析完成");
+            Console.WriteLine(imgUrl);
+            this.img_v.Source = new BitmapImage(new Uri(imgUrl, UriKind.Absolute));
+
             this.btn_download.IsEnabled = true;
         }
 
@@ -149,7 +154,9 @@ namespace Rabbit_YouToBeeDownload
             //代理
             WebProxy webProxy = new WebProxy(proxyUrl);
 
-            string rspBody = HttpUtil.PostFormData(apiUrl, param, webProxy);
+            string referer = "https://www.y2mate.com/youtube/"+ vid;
+
+            string rspBody = HttpUtil.PostFormData(apiUrl, param, webProxy, referer);
 
             Dictionary<string, string> bodyMap = JsonSerializer.Deserialize<Dictionary<string, string>>(rspBody);
             string downloadLink;
@@ -186,7 +193,11 @@ namespace Rabbit_YouToBeeDownload
                             {
                                 this.Dispatcher.Invoke(new Action(() =>
                                 {
-                                    txtOutAppend((totalDownload / 1024.0 / 1024).ToString("F2") + " MB / " + (lengthMax / 1024.0 / 1024).ToString("F2") + " MB (" + (totalDownload * 1.0 / lengthMax * 100).ToString("F2") + "%)");
+                                    double barValue = (totalDownload * 1.0 / lengthMax * 100);
+                                    string outStr = (totalDownload / 1024.0 / 1024).ToString("F2") + " MB / " + (lengthMax / 1024.0 / 1024).ToString("F2") + " MB (" + barValue.ToString("F2") + "%)";
+                                    this.lab_download.Header = outStr;
+                                    this.bar_download.Value = barValue;
+
                                 }));
                                 timeTemp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
                             }
@@ -195,7 +206,8 @@ namespace Rabbit_YouToBeeDownload
                 }
             }
 
-            txtOutAppend("==========\r\n视频下载完成");
+            this.bar_download.Value = 100.0;
+            this.lab_download.Header = "下载完成";
 
             this.Dispatcher.Invoke(new Action(() =>
             {
@@ -203,13 +215,17 @@ namespace Rabbit_YouToBeeDownload
             }));
         }
 
-        private void txtOutAppend(string appendText)
+        private void btn_selectpath_Click(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.Invoke(new Action(() =>
+            using (var dialog = new FolderBrowserDialog())
             {
-                txt_out.Text = "\r\n" + txt_out.Text;
-                txt_out.Text = appendText + txt_out.Text;
-            }));
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    this.txt_savefilepath.Text = dialog.SelectedPath;
+                }
+            }
         }
     }
 }
