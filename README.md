@@ -12,7 +12,7 @@
 另有java版本 [Rabbit_YouToBeeDownload](https://github.com/MikuNyanya/Rabbit_YouToBeeDownload)
 
 ### 下载:
-[点这里下载](https://github.com/MikuNyanya/Rabbit_YouToBeeDownload_win/releases/tag/v0.1)
+[点这里下载](https://github.com/MikuNyanya/Rabbit_YouToBeeDownload_win/releases/tag/v0.3)
 
 ### 它长这样:
 ![啊，图片挂了](https://github.com/MikuNyanya/Rabbit_YouToBeeDownload_win/blob/master/Rabbit_YouToBeeDownload/202405180001.png)
